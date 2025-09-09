@@ -122,7 +122,7 @@ async function gameLoop() {
     const inputs = { 'observation': new ort.Tensor('float32', observation, [1, 9]) };
     const results = await ortSession.run(inputs);
     
-    // [수정] 모델이 직접 결정한 행동을 BigInt에서 일반 숫자로 변환하여 바로 사용합니다.
+    // BigInt 오류를 해결한 핵심 코드입니다.
     const action = Number(results.action.data[0]);
 
     // 2. 결정된 행동 실행
@@ -158,28 +158,6 @@ async function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-    // 3. 게임 상태 업데이트 (두더지 생성/사라짐)
-    updateGameState();
-
-    // 4. 화면 그리기
-    drawBackground();
-    drawHoles();
-    drawMoles();
-    drawUI();
-
-    // 5. 게임 종료 조건 확인
-    if (missedMoles >= 10) {
-        alert(`게임 오버! 최종 점수: ${score}`);
-        gameRunning = false;
-        startButton.disabled = false;
-        startButton.textContent = "AI 다시 시작";
-        return;
-    }
-
-    // 다음 프레임 요청
-    requestAnimationFrame(gameLoop);
-
-
 // --- 초기화 및 이벤트 리스너 ---
 startButton.addEventListener('click', async () => {
     if (!ortSession) {
@@ -189,7 +167,8 @@ startButton.addEventListener('click', async () => {
             console.log("ONNX 모델 로드 성공!");
         } catch (e) {
             console.error("ONNX 모델 로드 실패:", e);
-            alert("AI 모델을 불러오는 데 실패했습니다. F12를 눌러 콘솔을 확인해주세요.");
+            alert("AI 모델('whac-a-mole.onnx') 로딩에 실패했습니다!\n\n1. 파일 이름이 정확한지 확인하세요.\n2. 파일이 index.html과 같은 위치에 있는지 확인하세요.\n3. F12를 눌러 콘솔의 404 에러를 확인하세요.");
+            startButton.disabled = false;
             startButton.textContent = "AI 시작!";
             return;
         }
@@ -202,7 +181,7 @@ startButton.addEventListener('click', async () => {
     gameLoop(); // AI 게임 루프 시작
 });
 
-// 초기 화면 그리기tnwjd
+// 초기 화면 그리기
 function initialize() {
     drawBackground();
     drawHoles();
