@@ -121,8 +121,9 @@ async function gameLoop() {
     });
     const inputs = { 'observation': new ort.Tensor('float32', observation, [1, 9]) };
     const results = await ortSession.run(inputs);
-    const actionLogits = results.action.data;
-    const action = actionLogits.indexOf(Math.max(...actionLogits));
+    
+    // [수정] 모델이 직접 결정한 행동을 BigInt에서 일반 숫자로 변환하여 바로 사용합니다.
+    const action = Number(results.action.data[0]);
 
     // 2. 결정된 행동 실행
     if (action > 0) {
@@ -156,6 +157,28 @@ async function gameLoop() {
     // 다음 프레임 요청
     requestAnimationFrame(gameLoop);
 }
+
+    // 3. 게임 상태 업데이트 (두더지 생성/사라짐)
+    updateGameState();
+
+    // 4. 화면 그리기
+    drawBackground();
+    drawHoles();
+    drawMoles();
+    drawUI();
+
+    // 5. 게임 종료 조건 확인
+    if (missedMoles >= 10) {
+        alert(`게임 오버! 최종 점수: ${score}`);
+        gameRunning = false;
+        startButton.disabled = false;
+        startButton.textContent = "AI 다시 시작";
+        return;
+    }
+
+    // 다음 프레임 요청
+    requestAnimationFrame(gameLoop);
+
 
 // --- 초기화 및 이벤트 리스너 ---
 startButton.addEventListener('click', async () => {
