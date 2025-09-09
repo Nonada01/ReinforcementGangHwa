@@ -179,7 +179,7 @@ startButton.addEventListener('click', async () => {
     gameLoop(); // AI 게임 루프 시작
 });
 
-// 초기 화면 그리기
+// 초기 화면 그리기tnwjd
 function initialize() {
     drawBackground();
     drawHoles();
