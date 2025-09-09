@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Whac-A-Mole</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>🤖 AI가 플레이하는 두더지 잡기</h1>
+    <div class="info-panel">
+        <div>점수: <span id="score">0</span></div>
+        <div>놓침: <span id="misses">0</span></div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <button id="startButton">AI 시작!</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
